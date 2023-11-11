@@ -46,6 +46,10 @@ create table rates (
 --because all the rows of the table student can be uniquely identified by this 
 --composite key. This is also why we are using CASCADE constraints
 
+
+
+
+
 -- insert values into user table
 INSERT INTO user (name) VALUES ('Steven');
 INSERT INTO user (name) VALUES ('Ben');
@@ -115,10 +119,6 @@ SELECT SUM(price) as total FROM buys
 GROUP BY user
 HAVING total > 1000;
 
-Q3.
-SELECT SUM(price) as total FROM buys 
-GROUP BY user
-HAVING total > 1000;
 
 04.
 SELECT ROUND(AVG(price),2) as total, category FROM item
@@ -136,3 +136,21 @@ SELECT COUNT(i.description) FROM item as i
 LEFT JOIN buys ON  i.id = buys.item
 GROUP BY i.description 
 ORDER BY COUNT(i.description) DESC LIMIT 5;
+
+07. 
+SELECT category, price FROM item
+WHERE price > 100 
+ORDER BY category ASC, price DESC; 
+
+08.
+
+SELECT same.description, u.name, r.name FROM
+(SELECT item.description as description, b.user as user1, v.user as user2
+FROM 
+buys AS b,
+buys AS v
+LEFT JOIN item on item.id = v.item
+WHERE v.item = b.item
+AND v.user <> b.user) same
+JOIN user as u ON same.user1 = u.id
+JOIN user as r ON same.user2 = r.id; 
