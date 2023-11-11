@@ -1,0 +1,138 @@
+-- delete tables Pubs, Sells, Drinkers and Visits, if they exist
+
+-- DROP TABLE user CASCADE;
+-- DROP TABLE item CASCADE;
+-- DROP TABLE buys CASCADE;
+-- DROP TABLE rates CASCADE;
+
+
+-- create user table
+create table user (
+	id int NOT NULL AUTO_INCREMENT,
+	name varchar(255) NOT NULL,
+	PRIMARY KEY(id)
+)ENGINE = Innodb;
+
+-- create item table
+create table item (
+	id int NOT NULL AUTO_INCREMENT,
+	description varchar(255),
+	category varchar(255),
+	price DECIMAL(10,2),
+	PRIMARY KEY(id)
+)ENGINE = Innodb;
+
+-- create buys table
+-- price is distinct from item price (i.e. not a foriegn key)  as the current price can vary
+create table buys (
+	user int,
+	item int,
+	price DECIMAL,
+	foreign key (user) references user(id)  ON DELETE CASCADE ON UPDATE CASCADE ,
+	foreign key (item) references item(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	PRIMARY KEY (item, user)
+)ENGINE = Innodb;
+
+-- create rates table
+create table rates (
+	user int,
+	item int,
+	rating tinyint,
+	foreign key (user) references user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	foreign key (item) references item(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	PRIMARY KEY (user, item)
+)ENGINE = Innodb;
+--we have made the composite key as the combination of two columns i.e. rollNumber and mobile 
+--because all the rows of the table student can be uniquely identified by this 
+--composite key. This is also why we are using CASCADE constraints
+
+-- insert values into user table
+INSERT INTO user (name) VALUES ('Steven');
+INSERT INTO user (name) VALUES ('Ben');
+INSERT INTO user (name) VALUES ('Sally');
+INSERT INTO user (name) VALUES ('Kendrick');
+INSERT INTO user (name) VALUES ('Taylor');
+INSERT INTO user (name) VALUES ('Smith');
+
+-- insert values into item table
+
+
+INSERT INTO item (description, category, price) VALUES ('macbook', 'computer', 800.00);
+INSERT INTO item (description, category, price) VALUES ('computer science book', 'book', 20.00);
+INSERT INTO item (description, category, price) VALUES ('fiction book', 'book', 20.00);
+INSERT INTO item (description, category, price) VALUES ('history book', 'book', 4.00);
+INSERT INTO item (description, category, price) VALUES ('foreign literature book', 'book', 28.00);
+INSERT INTO item (description, category, price) VALUES ('potted plant', 'plants', 18.00);
+INSERT INTO item (description, category, price) VALUES ('cactus', 'plants', 8.00);
+INSERT INTO item (description, category, price) VALUES ('potted flower', 'plants', 8.00);
+INSERT INTO item (description, category, price) VALUES ('lamp', 'interior', 38.00);
+INSERT INTO item (description, category, price) VALUES ('desk', 'interior', 388.00);
+INSERT INTO item (description, category, price) VALUES ('bookcase', 'interior', 288.00);
+
+-- insert values into buys table
+
+INSERT INTO buys (user, item, price) VALUES (1, 1, 800.00);
+INSERT INTO buys (user, item, price) VALUES (1, 2, 40.00);
+INSERT INTO buys (user, item, price) VALUES (1, 3, 50.00);
+INSERT INTO buys (user, item, price) VALUES (1, 4, 50.00);
+INSERT INTO buys (user, item, price) VALUES (2, 4, 50.00);
+INSERT INTO buys (user, item, price) VALUES (2, 1, 700.00);
+INSERT INTO buys (user, item, price) VALUES (3, 10, 700.00);
+INSERT INTO buys (user, item, price) VALUES (3, 9, 400.00);
+INSERT INTO buys (user, item, price) VALUES (5, 9, 400.00);
+INSERT INTO buys (user, item, price) VALUES (5, 8, 90.00);
+
+
+-- insert values into rates table
+
+INSERT INTO rates (user, item, rating) VALUES (1, 1, 4);
+
+INSERT INTO rates (user, item, rating) VALUES (1, 2, 2);
+INSERT INTO rates (user, item, rating) VALUES (1, 3, 5);
+INSERT INTO rates (user, item, rating) VALUES (1, 10, 4);
+
+
+INSERT INTO rates (user, item, rating) VALUES (2, 1, 4);
+
+INSERT INTO rates (user, item, rating) VALUES (2, 2, 2);
+INSERT INTO rates (user, item, rating) VALUES (2, 3, 2);
+INSERT INTO rates (user, item, rating) VALUES (2, 10, 2);
+
+INSERT INTO rates (user, item, rating) VALUES (4, 1, 4);
+
+INSERT INTO rates (user, item, rating) VALUES (4, 2, 2);
+INSERT INTO rates (user, item, rating) VALUES (4, 5, 2);
+INSERT INTO rates (user, item, rating) VALUES (4, 10, 2);
+
+Q1.
+SELECT description FROM item WHERE price < 5;
+
+Q2.
+YET TO BE DONE
+
+Q3.
+SELECT SUM(price) as total FROM buys 
+GROUP BY user
+HAVING total > 1000;
+
+Q3.
+SELECT SUM(price) as total FROM buys 
+GROUP BY user
+HAVING total > 1000;
+
+04.
+SELECT ROUND(AVG(price),2) as total, category FROM item
+GROUP BY category;
+
+05. 
+
+SELECT i.description, rating FROM item as i
+LEFT JOIN rates ON  i.id = rates.item
+LEFT JOIN user ON user.id = rates.user
+WHERE rating IS NULL;
+
+06. 
+SELECT COUNT(i.description) FROM item as i
+LEFT JOIN buys ON  i.id = buys.item
+GROUP BY i.description 
+ORDER BY COUNT(i.description) DESC LIMIT 5;

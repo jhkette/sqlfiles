@@ -1,0 +1,84 @@
+-- delete tables SUPPLY, PART and PROJECT, if they exist
+
+-- delete tables SUPPLY, PART and PROJECT, if they exist
+
+DROP TABLE Supply CASCADE;
+DROP TABLE Part CASCADE;
+DROP TABLE Project CASCADE;
+DROP TABLE Supplier CASCADE;
+
+
+-- create PART table
+create table Part (
+	PNUM varchar(50) primary key,
+	PNAME varchar(50) NULL ,
+	COLOUR varchar(50) NULL,
+	WEIGHT int(5) NULL,
+	CITY varchar(50) NULL
+) ENGINE = Innodb;
+
+
+-- create PROJECT table
+create table Project (
+	JNUM varchar(50) primary key,
+	JNAME varchar(50) NULL ,
+	CITY varchar(50) NULL
+) ENGINE = Innodb;
+
+
+-- create SUPPLY table with foreign key constraints
+create table Supply (
+	SNUM varchar(50) NOT NULL,
+	PNUM varchar(50) NOT NULL,
+	JNUM varchar(50) NOT NULL,
+	QTY int(5) NULL,
+	foreign key (PNUM) references Part(PNUM) ON UPDATE CASCADE ON DELETE CASCADE,
+	foreign key (JNUM) references Project(JNUM) ON UPDATE CASCADE ON DELETE CASCADE,
+	PRIMARY KEY (SNUM,PNUM,JNUM)
+) ENGINE = Innodb;
+
+
+-- insert values into PART table
+insert into Part values ('P1','Nut','Red',12,'London');
+insert into Part values ('P2','Bolt','Green',17,'Paris');
+insert into Part values ('P3','Screw','Blue',17,'Rome');
+insert into Part values ('P4','Screw','Red',14,'London');
+insert into Part values ('P5','Cam','Blue',12,'Paris');
+insert into Part values ('P6','Cog','Red',19,'London');
+
+
+-- insert values into PROJECT table
+insert into Project values ('J1','Sorter','Paris');
+insert into Project values ('J2','Display','Rome');
+insert into Project values ('J3','OCR','Athens');
+insert into Project values ('J4','Console','Athens');
+insert into Project values ('J5','RAID','London');
+insert into Project values ('J6','EDS','Oslo');
+insert into Project values ('J7','Tape','London');
+
+
+-- insert values into SUPPLY table
+insert into Supply values ('S1','P1','J1',200);
+insert into Supply values ('S1','P1','J4',700);
+insert into Supply values ('S2','P3','J1',400);
+insert into Supply values ('S2','P3','J2',200);
+insert into Supply values ('S2','P3','J3',200);
+insert into Supply values ('S2','P3','J4',500);
+insert into Supply values ('S2','P3','J5',600);
+insert into Supply values ('S2','P3','J6',400);
+insert into Supply values ('S2','P3','J7',800);
+insert into Supply values ('S2','P5','J2',100);
+insert into Supply values ('S3','P3','J1',200);
+insert into Supply values ('S3','P4','J2',500);
+insert into Supply values ('S4','P6','J3',300);
+insert into Supply values ('S4','P6','J7',300);
+insert into Supply values ('S5','P2','J2',200);
+insert into Supply values ('S5','P2','J4',100);
+insert into Supply values ('S5','P5','J5',500);
+insert into Supply values ('S5','P5','J7',100);
+insert into Supply values ('S5','P6','J2',200);
+insert into Supply values ('S5','P1','J4',100);
+insert into Supply values ('S5','P3','J4',200);
+insert into Supply values ('S5','P4','J4',800);
+insert into Supply values ('S5','P5','J4',400);
+insert into Supply values ('S5','P6','J4',500);

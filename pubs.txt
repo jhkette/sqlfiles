@@ -1,0 +1,77 @@
+-- delete tables Pubs, Sells, Drinkers and Visits, if they exist
+
+DROP TABLE Pubs CASCADE;
+DROP TABLE Sells CASCADE;
+DROP TABLE Drinkers CASCADE;
+DROP TABLE Visits CASCADE;
+
+
+-- create Pubs table
+create table Pubs (
+	name varchar(50) primary key,
+	location varchar(50)
+);
+
+
+-- create Sells table
+create table Sells (
+	pub varchar(50),
+	beer varchar(50),
+	price numeric(4,2),
+	primary key (pub,beer)
+);
+
+
+-- create Drinkers table
+create table Drinkers (
+	name varchar(50) primary key,
+	location varchar(50)
+);
+
+
+-- create Visits table
+create table Visits (
+	drinker varchar(50),
+	pub varchar(50),
+	primary key (drinker,pub)
+);
+
+
+-- insert values into Pubs table
+insert into Pubs values ('Horse and Hound','Bloomsbury');
+insert into Pubs values ('Hound and Hare','Islington');
+insert into Pubs values ('March Hare','Bloomsbury');
+insert into Pubs values ('Black Horse','Islington');
+insert into Pubs values ('White Horse','Bloomsbury');
+
+
+-- insert values into Sells table
+insert into Sells values ('Horse and Hound','Bad Habit',1.50);
+insert into Sells values ('Horse and Hound','Rampant Ram',2.00);
+insert into Sells values ('Hound and Hare','Shining Wit',2.75);
+insert into Sells values ('Hound and Hare','Rampant Ram',2.50);
+insert into Sells values ('March Hare','Bad Habit',1.75);
+insert into Sells values ('March Hare','Rampant Ram',2.50);
+insert into Sells values ('Black Horse','Bad Habit',2.50);
+insert into Sells values ('Black Horse','Shining Wit',2.25);
+insert into Sells values ('Black Horse','Rampant Ram',2.50);
+insert into Sells values ('White Horse','Rampant Ram',2.75);
+
+
+-- insert values into Drinkers table
+insert into Drinkers values ('Alice','Islington');
+insert into Drinkers values ('Bob','Bloomsbury');
+insert into Drinkers values ('Carol','Islington');
+insert into Drinkers values ('Dave','Bloomsbury');
+insert into Drinkers values ('Eve','Stratford');
+
+
+-- insert values into Visits table
+insert into Visits values ('Alice','Black Horse');
+insert into Visits values ('Alice','Hound and Hare');
+insert into Visits values ('Bob','Horse and Hound');
+insert into Visits values ('Bob','White Horse');
+insert into Visits values ('Carol','March Hare');
+insert into Visits values ('Dave','Hound and Hare');
+insert into Visits values ('Eve','March Hare');
+

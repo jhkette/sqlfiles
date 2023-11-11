@@ -1,0 +1,5 @@
+https://stackoverflow.com/questions/69056762/when-to-set-null-vs-cascade-constraints-on-a-foreign-key-in-sql#:~:text=2%20Answers&text=Generally%20we%20prefer%20ON%20DELETE,the%20lifecycle%20of%20the%20child.
+
+https://stackoverflow.com/questions/6720050/foreign-key-constraints-when-to-use-on-update-and-on-delete
+
+useful guide on constraints
