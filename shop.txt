@@ -27,7 +27,7 @@ create table item (
 create table buys (
 	user int,
 	item int,
-	price DECIMAL,
+	price DECIMAL(10,2),
 	foreign key (user) references user(id)  ON DELETE CASCADE ON UPDATE CASCADE ,
 	foreign key (item) references item(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY (item, user)
@@ -42,10 +42,6 @@ create table rates (
 	foreign key (item) references item(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY (user, item)
 )ENGINE = Innodb;
---we have made the composite key as the combination of two columns i.e. rollNumber and mobile 
---because all the rows of the table student can be uniquely identified by this 
---composite key. This is also why we are using CASCADE constraints
-
 
 
 
@@ -90,21 +86,17 @@ INSERT INTO buys (user, item, price) VALUES (5, 8, 90.00);
 -- insert values into rates table
 
 INSERT INTO rates (user, item, rating) VALUES (1, 1, 4);
-
 INSERT INTO rates (user, item, rating) VALUES (1, 2, 2);
 INSERT INTO rates (user, item, rating) VALUES (1, 3, 5);
+INSERT INTO rates (user, item, rating) VALUES (1, 3, 5);
 INSERT INTO rates (user, item, rating) VALUES (1, 10, 4);
-
-
 INSERT INTO rates (user, item, rating) VALUES (2, 1, 4);
-
 INSERT INTO rates (user, item, rating) VALUES (2, 2, 2);
 INSERT INTO rates (user, item, rating) VALUES (2, 3, 2);
 INSERT INTO rates (user, item, rating) VALUES (2, 10, 2);
-
 INSERT INTO rates (user, item, rating) VALUES (4, 1, 4);
-
 INSERT INTO rates (user, item, rating) VALUES (4, 2, 2);
+INSERT INTO rates (user, item, rating) VALUES (4, 3, 5);
 INSERT INTO rates (user, item, rating) VALUES (4, 5, 2);
 INSERT INTO rates (user, item, rating) VALUES (4, 10, 2);
 
@@ -126,16 +118,16 @@ GROUP BY category;
 
 05. 
 
-SELECT i.description, rating FROM item as i
-LEFT JOIN rates ON  i.id = rates.item
-LEFT JOIN user ON user.id = rates.user
-WHERE rating IS NULL;
+SELECT i.description, AVG(r.rating) FROM item  i
+LEFT JOIN rates r ON  i.id = r.item
+GROUP BY i.description
+HAVING AVG(r.rating) IS NULL;
 
 06. 
-SELECT COUNT(i.description) FROM item as i
-LEFT JOIN buys ON  i.id = buys.item
-GROUP BY i.description 
-ORDER BY COUNT(i.description) DESC LIMIT 5;
+SELECT COUNT(i.id), i.description FROM item as i
+ JOIN buys ON  buys.item = i.id
+GROUP BY i.id
+ORDER BY COUNT(i.id) DESC LIMIT 3;
 
 07. 
 SELECT category, price FROM item
@@ -154,3 +146,44 @@ WHERE v.item = b.item
 AND v.user <> b.user) same
 JOIN user as u ON same.user1 = u.id
 JOIN user as r ON same.user2 = r.id; 
+
+
+09.
+SELECT u.name, i.price as original, b.price  as bought
+FROM item as i
+JOIN buys as b ON i.id = b.item
+JOIN user as u ON u.id = b.user
+WHERE  b.price > i.price;
+
+10. 
+Select u.name, i.description FROM 
+user as u 
+JOIN buys as b ON u.id = b.user
+JOIN item as i ON b.item = i.id
+LEFT JOIN rates as r ON r.item = b.item
+WHERE r.item IS NULL;
+
+-- we only join first tabe as we don not want nulls in bought table to confuse data,
+
+11. 
+
+Select COUNT(r.item) as ratingnumber, ROUND(AVG(r.rating), 2) as average FROM 
+rates as r
+GROUP BY r.item
+HAVING ratingnumber >= 2;
+
+12.
+For each user, find the items which they have not bought, 
+and which have the highest average rating.
+
+SELECT user.name, MAX(final.favg) as highestaverage FROM user,
+(SELECT b.item as item, b.user as user FROM
+buys as b  
+) as boughtitems
+JOIN (SELECT ROUND(AVG(rates.rating),2) as favg, rates.item as f_item FROM
+rates
+GROUP BY rates.item) final
+ON f_item = boughtitems.item
+WHERE user.id != boughtitems.user
+GROUP BY user.name;  
+
